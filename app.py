@@ -1,6 +1,13 @@
 import streamlit as st
 import openai
 
+hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        </style>
+        """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 openai.api_key = st.secrets["APIKEY"]
 
 def openai_call(text):
