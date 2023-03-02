@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 import openai
 
-import config_
-
-openai.api_key = config_.api_key
+openai.api_key = st.secrets["APIKEY"]
 
 def openai_call(text):
     response = openai.ChatCompletion.create(
@@ -19,7 +17,7 @@ def openai_call(text):
 def check_password():
     def password_entered():
         """Check whether correct password entered by user"""
-        if st.session_state["password"] == config_.secrets["password"]:
+        if st.session_state["password"] == st.secrets["PASSWORD"]:
             st.session_state["password_correct"] = True
             del st.session_state["password"]
         else:
