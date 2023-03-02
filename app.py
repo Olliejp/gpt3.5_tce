@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import openai
 
 openai.api_key = st.secrets["APIKEY"]
