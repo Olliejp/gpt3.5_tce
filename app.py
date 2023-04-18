@@ -1,22 +1,20 @@
 import streamlit as st
+from streamlit_chat import message
 import openai
 
-hide_menu_style = """
-        <style>
-        #MainMenu {visibility: hidden;}
-        </style>
-        """
-st.markdown(hide_menu_style, unsafe_allow_html=True)
+#hide_menu_style = """
+#        <style>
+#        #MainMenu {visibility: hidden;}
+#        </style>
+#        """
+#st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-openai.api_key = st.secrets["APIKEY"]
+st.secrets["APIKEY"]
 
-def openai_call(text):
+def openai_call(prompt):
     response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=[
-            {"role": "system", "content": "You are a professional writing assistant who helps writers produce high quality content"},
-            {"role": "user", "content": text}
-        ]
+    model="gpt-4",
+    messages=prompt,
     )
     return response
 
@@ -46,13 +44,30 @@ def check_password():
         
 
 if check_password():
-    st.title("TCE GPT3.5 demo app")
+    st.title("TCE GPT4 demo app")
 
-    input_text = st.text_area("Please enter your prompt")
+    BASE_PROMPT = [{"role": "system", "content": "You are a helpful assistant."}]
 
-    if st.button("Let's go!!"):
-        data_load_state = st.text("BEEEP BOOP BEEEEP BOOOOOPP")
-        response = openai_call(input_text)
-        data_load_state.text("")
-        st.write(response['choices'][0]['message']['content'])
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = BASE_PROMPT
+
+    prompt = st.text_input("Prompt", placeholder="What do you want to know baby?")
+
+    if st.button("Send", key="send"):
+        with st.spinner("BEEP BOOOP BEEP BOOP..."):
+            st.session_state["messages"] += [{"role": "user", "content": prompt}]
+            response = openai_call(st.session_state["messages"])
+            message_response = response["choices"][0]["message"]["content"]
+            st.session_state["messages"] += [{"role": "assistant", "content": message_response}]
+            #show_responses(text) 
+    
+    if st.button("Clear", key="clear"):
+        st.session_state["messages"] = BASE_PROMPT
+
+    for i in range(len(st.session_state["messages"])-1,-1,-1):
+        if st.session_state["messages"][i]['role'] == 'user':
+            message(st.session_state["messages"][i]['content'], is_user=True)
+        if st.session_state["messages"][i]['role'] == 'assistant':
+            message(st.session_state["messages"][i]['content'], avatar_style="bottts-neutral", seed='Aneka')
+
 
