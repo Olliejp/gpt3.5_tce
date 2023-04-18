@@ -59,7 +59,6 @@ if check_password():
             response = openai_call(st.session_state["messages"])
             message_response = response["choices"][0]["message"]["content"]
             st.session_state["messages"] += [{"role": "assistant", "content": message_response}]
-            #show_responses(text) 
     
     if st.button("Clear", key="clear"):
         st.session_state["messages"] = BASE_PROMPT
