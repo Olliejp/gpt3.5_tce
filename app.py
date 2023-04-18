@@ -51,7 +51,7 @@ if check_password():
     if "messages" not in st.session_state:
         st.session_state["messages"] = BASE_PROMPT
 
-    prompt = st.text_input("Prompt", placeholder="What do you want to know baby?")
+    prompt = st.text_area("Prompt", placeholder="What do you want to know baby?")
 
     if st.button("Send", key="send"):
         with st.spinner("BEEP BOOOP BEEP BOOP..."):
