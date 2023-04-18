@@ -9,7 +9,7 @@ import openai
 #        """
 #st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-st.secrets["APIKEY"]
+openai.api_key = st.secrets["APIKEY"]
 
 def openai_call(prompt):
     response = openai.ChatCompletion.create(
